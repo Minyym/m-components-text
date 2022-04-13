@@ -1,4 +1,4 @@
-import _ from "lodash";
+// import _ from "lodash";
 import Big from "big.js";
 
 /**
@@ -8,9 +8,9 @@ import Big from "big.js";
  */
 type CoverDigit2Uppercase = (args: number) => string;
 export const coverDigit2Uppercase: CoverDigit2Uppercase = (n) => {
-  if (_.isNil(n) || _.isNaN(n)) {
-    return "-";
-  }
+  // if (_.isNil(n) || _.isNaN(n)) {
+  //   return "-";
+  // }
 
   const fraction = ["角", "分"];
 
@@ -37,6 +37,8 @@ export const coverDigit2Uppercase: CoverDigit2Uppercase = (n) => {
     right += digit[Math.floor(digitNum)] + fraction[i];
   }
   right = right.replace(/(零分)/, "").replace(/(零角)/, "零");
+  right = right === "零" ? "整" : right;
+  right = /角$/.test(right) ? right + "整" : right;
   n = Math.floor(n);
 
   for (i = 0; i < unit[0].length && n > 0; i++) {
@@ -47,12 +49,11 @@ export const coverDigit2Uppercase: CoverDigit2Uppercase = (n) => {
     }
     left = p.replace(/(零.)*零$/, "").replace(/^$/, "零") + unit[0][i] + left;
   }
-
   return (
     head +
-    (
-      left.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零") +
-      (right === "零" ? "整" : right)
-    ).replace(/^整$/, "零元整")
+    (left.replace(/(零.)*零元/, "元").replace(/(零.)+/g, "零") + right).replace(
+      /^整$/,
+      "零元整"
+    )
   );
 };
